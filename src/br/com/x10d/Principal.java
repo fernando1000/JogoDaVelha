@@ -1,7 +1,6 @@
 package br.com.x10d;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -17,10 +16,11 @@ public class Principal extends Application {
 	private static final int LARGURA_ALTURA_TELA = 500;
 	private static final int TAMANHO_QUADRADO = LARGURA_ALTURA_TELA/5;
 	private int quantidadeJogadas = 1;
-	private List<PosicaoJogador> posicoesDoJogador1 = new ArrayList<PosicaoJogador>();
-	private List<PosicaoJogador> posicoesDoJogador2 = new ArrayList<PosicaoJogador>();
-	
 	private Text text;
+	private Group root;
+	private static final String GANHOU_X = "XXX";
+	private static final String GANHOU_O = "OOO";
+	private HashMap<String, String> mapa = new HashMap<>();
 	
 	public static void main(String[] args) {
 		Application.launch(args);
@@ -29,7 +29,7 @@ public class Principal extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 
-		Group root = new Group();
+		root = new Group();
 		Scene scene = new Scene(root, LARGURA_ALTURA_TELA, LARGURA_ALTURA_TELA, Color.AQUAMARINE);
 		
 		criaBoard(root);
@@ -80,24 +80,21 @@ public class Principal extends Application {
 	private void jogoContinua(Button source) {
 		limpaErro();
 		realizaJogada(source);
+		
 		if(temVencedor()) {
 			text.setText("Parabêns");
 			text.setStroke(Color.GREEN);
 		}
 	}
-	private void realizaJogada(Button source) {
+	private void realizaJogada(Button botao) {
 		quantidadeJogadas++;
 		
-		PosicaoJogador posicaoJogador = new PosicaoJogador();
-		posicaoJogador.posicao = source.getId();
-		posicaoJogador.jogador = source.getText();
-		
 		if(quantidadeJogadas % 2 == 0) {
-			source.setText("X");
-			posicoesDoJogador1.add(posicaoJogador);
+			botao.setText("X");
+			mapa.put(botao.getId(), botao.getText());
 		}else {
-			source.setText("O");
-			posicoesDoJogador2.add(posicaoJogador);
+			botao.setText("O");
+			mapa.put(botao.getId(), botao.getText());
 		}
 	}
 	private void jogadaNaoPermitida() {
@@ -109,36 +106,48 @@ public class Principal extends Application {
 	}
 	
 	private boolean temVencedor() {
-		System.out.println(posicoesDoJogador1);
-		if(posicoesDoJogador1.size() < 3) {
-			return false;
-		}
-	
+		String horizontal1 = mapa.get("1")+mapa.get("2")+mapa.get("3");
+		String horizontal2 = mapa.get("4")+mapa.get("5")+mapa.get("6");
+		String horizontal3 = mapa.get("7")+mapa.get("8")+mapa.get("9");
+		String vertical1 = mapa.get("1")+mapa.get("4")+mapa.get("7");
+		String vertical2 = mapa.get("2")+mapa.get("5")+mapa.get("8");
+		String vertical3 = mapa.get("3")+mapa.get("6")+mapa.get("9");
+		String diagonal1 = mapa.get("1")+mapa.get("5")+mapa.get("9");
+		String diagonal2 = mapa.get("3")+mapa.get("5")+mapa.get("7");
 		
-		String posicaoAcumulada = "";
-		for(PosicaoJogador pj : posicoesDoJogador1) {
-			posicaoAcumulada = pj.posicao;
+		if(horizontal1.equals(GANHOU_X) || horizontal1.equals(GANHOU_O)) {
+			System.out.println("horizontal1: "+horizontal1);
+			return true;
 		}
-		System.out.println(posicaoAcumulada);
-		
-		String[] possiveisGanhos = possiveisGanhos();
-		for(int i=0; i<possiveisGanhos.length; i++) {
-			if(possiveisGanhos[i].equals(posicoesDoJogador1.get(i).posicao)) {
-				return true;
-			}
+		if(horizontal2.equals(GANHOU_X) || horizontal2.equals(GANHOU_O)) {
+			System.out.println("horizontal2: "+horizontal2);
+			return true;
+		}
+		if(horizontal3.equals(GANHOU_X) || horizontal3.equals(GANHOU_O)) {
+			System.out.println("horizontal3: "+horizontal3);
+			return true;
+		}
+		if(vertical1.equals(GANHOU_X) || vertical1.equals(GANHOU_O)) {
+			System.out.println("vertical1: "+vertical1);
+			return true;
+		}
+		if(vertical2.equals(GANHOU_X) || vertical2.equals(GANHOU_O)) {
+			System.out.println("vertical2: "+vertical2);
+			return true;
+		}
+		if(vertical3.equals(GANHOU_X) || vertical3.equals(GANHOU_O)) {
+			System.out.println("vertical3: "+vertical3);
+			return true;
+		}
+		if(diagonal1.equals(GANHOU_X) || diagonal1.equals(GANHOU_O)) {
+			System.out.println("diagonal1: "+diagonal1);
+			return true;
+		}
+		if(diagonal2.equals(GANHOU_X) || diagonal2.equals(GANHOU_O)) {
+			System.out.println("diagonal2: "+diagonal2);
+			return true;
 		}
 		return false;
 	}
-	
-	private String[] possiveisGanhos() {
-		String[] ganhos = {"123", "456", "789", "147", "258", "369", "159", "357"};
-		return ganhos;
-	}
-	
-}
 
-
-class PosicaoJogador {
-	String posicao;
-	String jogador;
 }
