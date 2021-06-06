@@ -2,14 +2,20 @@ package br.com.x10d;
 
 import java.util.HashMap;
 
+import javafx.animation.Animation;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Principal extends Application {
 	
@@ -29,7 +35,24 @@ public class Principal extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 
+		
+		TranslateTransition translateTransition = new TranslateTransition();
+		translateTransition.setDuration(Duration.seconds(1));
+		translateTransition.setToX(350);
+		translateTransition.setToY(350);
+		translateTransition.setAutoReverse(true);
+		translateTransition.setCycleCount(Animation.INDEFINITE);
+									Circle circle = new Circle();
+									circle.setStroke(Color.RED);
+									circle.setFill(Color.BLUE);
+									circle.setRadius(15);
+									circle.setLayoutX(50);
+									circle.setLayoutY(50);
+		translateTransition.setNode(circle);
+		translateTransition.play();
+		
 		root = new Group();
+		
 		Scene scene = new Scene(root, LARGURA_ALTURA_TELA, LARGURA_ALTURA_TELA, Color.AQUAMARINE);
 		
 		criaBoard(root);
@@ -40,6 +63,7 @@ public class Principal extends Application {
 		text.setLayoutY(LARGURA_ALTURA_TELA / 6);
 		text.minHeight(40);
 		root.getChildren().add(text);
+		root.getChildren().add(circle);
 		
 		stage.setScene(scene);
 		stage.show();
@@ -83,6 +107,7 @@ public class Principal extends Application {
 		
 		if(temVencedor()) {
 			text.setText("Parabêns");
+			text.setFont(new Font(40));
 			text.setStroke(Color.GREEN);
 		}
 	}
